@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.dao.EntryDao">
+	<select id="getEntryList" resultType="Entry">
+		select * from edoc_entry
+	</select>
+	<select id="findEntryById" resultType="Entry">
+		select * from edoc_entry 
+			where id=#{id}
+	</select>
+	<select id="findCategory" parameterType="String" resultType="Entry">
+		select e.id as id,e.title,e.summary as summary,
+		e.uploadUser as uploadUser,e.createDate as createDate,
+		e.categoryId as categoryId
+		from edoc_entry e join edoc_category c
+		on e.categoryId = c.id
+		<where>
+			<if test="id != null and id !='' ">
+				c.id=#{id}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertObject" parameterType="entry">
+		insert into edoc_entry (categoryId,title,summary,uploadUser,createDate)
+		values (#{categoryId},#{title},#{summary},#{uploadUser},#{createDate})
+	</insert>
+	<delete id="deleteObject" parameterType="String">
+		delete from edoc_entry where id = #{id};
+	</delete>
+	
+	<update id="updateEntry" parameterType="Entry">
+		update edoc_entry set categoryId=#{categoryId},
+		title=#{title},
+		summary=#{summary},uploadUser=#{uploadUser},
+		createDate=#{createDate}
+		where id = #{id}
+	</update>
+</mapper>

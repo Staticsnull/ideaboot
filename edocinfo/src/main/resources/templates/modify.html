@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>修改页面</title>
+</head>
+<body>
+<div style="height: 100%; margin: 20px;">
+
+    <form id="addForm" th:action="@{/toUpdate}" method="post" >
+
+        <table style="margin: auto;border: 1px solid #151515">
+            <tr><td style="padding-top: 10px; padding-bottom: 10px;">
+                更新电子文档
+            </td>
+            </tr>
+            <tr>
+                <td>文档编号：</td>
+                <td>
+                    <input readonly="true" type="text" id="id" name="id"
+                           th:value="${entry.id}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>文档名称：</td>
+                <td>
+                    <input type="text" id="title" name="title"
+                           th:value="${entry.title}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>文档摘要：</td>
+                <td>
+                    <textarea rows="6" cols="25" name="summary"
+                              id="summary" th:text="${entry.summary}"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>上传人</td>
+                <td><input type="text" name="uploadUser" id="uploadUser"
+                 th:value="${entry.uploadUser}"></td>
+            </tr>
+            <tr>
+                <td>上传时间</td>
+                <td><input type="datetime" name="createDate" id="createDate"
+                    th:value="${#calendars.format(entry.createDate,'yyyy-MM-dd')}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="hidden" name="categoryId" th:value="${entry.categoryId}">
+                    <input type="submit" value="提交" >
+                    <input type="button" value="取消" onclick="javascript:history.go(-1)">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

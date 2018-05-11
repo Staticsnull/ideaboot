@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>添加页面</title>
+    <script type="text/javascript" src="/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        function goBack() {
+            window.history.go(-1);
+        }
+        function vSubmit(type){
+            var cf = confirm('是否确认提交数据');
+            if(cf == true){
+                $('#type').val(type);
+
+                var title = $('#title').val();
+                var accepter = $('#accepter').val();
+
+                if(''==title){
+                    $('#titleWarn').text('主题不能为空');
+                    return false;
+                }
+
+                if(''==accepter){
+                    $('#accepterWarn').text('收件人不能为空');
+                    return false;
+                }
+                $.ajax({
+                    url:'/hasAccepter?accepter='+accepter,
+                    success:function(data){
+                        if('1'==data){
+                            $('#addForm').attr("action","/add");
+                            $('#addForm').submit();
+                        }else{
+                            $('#accepterWarn').text('收件人不存在，请重新输入');
+                            return false;
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+<div align="center" style="font-size: 25pt;">邮件管家</div>
+<span style="float: right;">欢迎您! <strong th:text="${session.user.userName }"></strong>
+		<a href="/logout">注销</a></span>
+<table border="1" cellspacing="0" style="height: 80%; width: 100%;">
+    <tr style="height: 30px;">
+        <td>
+            <table>
+                <tr>
+                    <td>菜单项>></td>
+                    <td><a href="/listSend">发件箱</a></td>
+                    <td>|<a href="/listDraft">草稿箱</a></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td height="100%">
+            <div style="height: 100%; margin: 20px;">
+                <div align="left" style="padding-top: 10px; padding-bottom: 10px;">
+                    你现在所在的位置是:邮件管理页面>>邮件新建页面</div>
+                <form id="addForm" method="post" enctype="multipart/form-data">
+                    <table style="margin: auto;border: 1px solid #151515">
+                        <tr>
+                            <td>主题：</td>
+                            <td><input type="text" id="title" name="title" /><font color="red" id="titleWarn">*</font></td>
+                        </tr>
+                        <tr>
+                            <td>接收人：</td>
+                            <td><input type="text" id="accepter" name="accepter" /><font color="red" id="accepterWarn">*</font></td>
+                        </tr>
+                        <tr>
+                            <td>内容：</td>
+                            <td>
+                                <textarea rows="6" cols="25" name="content" id="content"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>附件：</td>
+                            <td><input type="file" name="file"><font color="red">*上传大小不能超过5M</font></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="text-align: center;">
+                                <input type="hidden" id="type" name="type">
+                                <input type="button" value="提交" onclick="vSubmit(1);">
+                                <input type="button" value="取消" onclick="goBack();">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+
+            </div>
+
+        </td>
+    </tr>
+</table>
+</body>
+</html>

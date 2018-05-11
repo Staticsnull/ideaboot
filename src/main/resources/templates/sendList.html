@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        function toAdd() {
+            window.location.href = '/toAdd';
+        }
+
+        function deleteEmail(id) {
+            var cf = confirm('是否确认删除数据');
+            if (cf == true) {
+                window.location.href = '/deleteMail?id=' + id;
+            } else {
+                return false;
+            }
+
+        }
+    </script>
+</head>
+<body>
+<div align="center" style="font-size: 25pt;">邮件管家</div>
+<span style="float: right;">欢迎您! <strong th:text="${session.user.userName}"></strong>
+		<a href="/logout">注销</a></span>
+<table border="1" cellspacing="0" style="height: 80%; width: 100%;">
+    <tr style="height: 30px;">
+        <td>
+            <table>
+                <tr>
+                    <td>菜单项>></td>
+                    <td><a href="/listSend">发件箱</a></td>
+                    <td>|
+                        <a href="/listDraft">草稿箱</a></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td height="100%">
+            <div style="height: 100%; margin: 20px;">
+                <div align="left" style="padding-top: 10px;padding-bottom: 10px;">
+                    你现在所在的位置是:发件箱
+                </div>
+                <div align="left">
+                    <form action="/listSend" method="post">
+                        接收人:<input type="text" th:value="${accepter }" name="accepter" size="20">
+                        <input type="submit" value="查询"> <input type="button" value="新建邮件" onclick="toAdd();"/>
+                    </form>
+                </div>
+                <table border="1" cellspacing="0" style="text-align: center; width: 100%">
+                    <tr>
+                        <th>主题</th>
+                        <th>发送时间</th>
+                        <th>接收人</th>
+                        <th>接收人电话</th>
+                        <th>操作</th>
+                    </tr>
+                    <th:block th:each="gs,st:${list}">
+                        <!--th:style="'display:' + @{(${sitrue} ? 'none' : 'inline-block')} + ''"-->
+                        <tr th:style="'background:' +@{(${st.index%2==0}  ? 'gray;':'')}+''">
+                            <td th:text="${gs.title}"></td>
+                            <td th:text="${#calendars.format(gs.sendTime,'yyyy-MM-dd hh:mm')}">
+                            </td>
+                            <td th:text="${gs.userName }"></td>
+                            <td th:text="${gs.phone }"></td>
+                            <td><a href="javascript:alert('该功能暂未实现')">编辑</a>|
+                                <a href="#"
+                                   th:onclick="'deleteEmail(\''+${gs.id}+'\')'">删除</a>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+
+
+            </div>
+
+        </td>
+    </tr>
+</table>
+</body>
+</html>

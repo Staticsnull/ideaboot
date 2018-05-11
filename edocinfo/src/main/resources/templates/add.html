@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加电子文档</title>
+    <script type="application/javascript" src="/jquery-3.3.1.min.js"></script>
+    <script type="application/javascript">
+        var DATE_FORMAT = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/;
+        /*function goBack() {
+            window.history.go(-1);
+        }*/
+        function vSubmit() {
+            var cf = confirm('是否确认提交数据');
+            if(cf == true){
+                //$('#type').val(type);
+
+                var title = $('#title').val();
+                var createDate = $('#createDate').val();
+                console.log(title);
+                if(''==title){
+                    $('#titleWarn').text('文档名称不能为空!');
+                    return false;
+                }
+                if(!DATE_FORMAT.test(createDate)){
+                    $('#dateWarn').text('时间格式有误,请输入正确的格式:yyyy-MM-dd!');
+                    return false;
+                }
+                $('#addForm').attr("action","/add");
+                $('#addForm').submit();
+            }
+            return false;
+        }
+
+    </script>
+</head>
+<body>
+<div style="height: 100%; margin: 20px;">
+
+    <form id="addForm"  method="post" >
+
+        <table style="margin: auto;border: 1px solid #151515">
+            <tr><td style="padding-top: 10px; padding-bottom: 10px;">
+                增加电子文档
+            </td>
+            </tr>
+            <tr>
+                <td>文档名称：</td>
+                <td>
+                    <input type="text" id="title" name="title" />
+                    <font color="red" id="titleWarn">*</font>
+                </td>
+            </tr>
+            <tr>
+                <td>文档摘要：</td>
+                <td>
+                    <textarea rows="6" cols="25" name="summary" id="summary"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>上传人</td>
+                <td><input type="text" name="uploadUser" id="uploadUser"></td>
+            </tr>
+            <tr>
+                <td>上传时间</td>
+                <td><input type="datetime" name="createDate" id="createDate">
+                    <font color="red" id="dateWarn">*</font>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="button" value="提交" onclick="vSubmit();">
+                    <input type="button" value="取消" onclick="javascript:history.go(-1)">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

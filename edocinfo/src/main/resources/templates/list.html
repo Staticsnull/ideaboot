@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="application/javascript" src="/jquery-3.3.1.min.js"></script>
+    <script type="application/javascript">
+        $(document).ready(function () {
+            getCategoryList();
+        });
+        function findCategory() {
+            var id = $("#categoryInfo").val();
+            window.location.href = "/list?id="+id;
+
+        }
+        function getCategoryList() {
+            var url = "/getCategoryList";
+            $.get(url,function (result) {
+                var select = $("#categoryInfo");
+                select.html("");
+                select.append("<option value=''>全部</option>");
+                for (var i in result){
+                    select.append("<option value="+result[i].id+">"
+                        +result[i].name+"</option>");
+                }
+            });
+        }
+        function toAdd() {
+            window.location.href="/toAdd";
+        }
+        function deleteObj(id) {
+            var flag = window.confirm("确定要删除数据吗?");
+            if (flag){
+                console.log(id);
+                var url = "deleteEntry?id="+id;
+                $.get(url,function (result) {
+                    if(result.OK){
+                        alert("删除成功!");
+                        window.location.href="/list";
+                    }
+                });
+            }
+            return false;
+
+        }
+    </script>
+</head>
+<body>
+<div>
+    文档分类:
+    <select id="categoryInfo">
+    </select>
+    <input type="submit" value="查询" onclick="findCategory();">
+    <input type="button" value="新增电子文档" onclick="toAdd();"/>
+</div>
+<table border="1" cellspacing="0" style="height: 80%; width: 100%;">
+    <thead style="height: 30px;">电子文档列表
+    </thead>
+
+    <tbody>
+    <tr>
+        <th>文档编号</th>
+        <th>文档名称</th>
+        <th>文档摘要</th>
+        <th>工作人</th>
+        <th>工作时间</th>
+        <th>操作</th>
+    </tr>
+    <th:block th:if="${not #lists.isEmpty(entryList)}">
+        <tr th:each="e,st:${entryList}"
+                th:style="'background:' +@{(${st.index%2==0}  ? 'gray;':'')}+''">
+            <td th:text="${e.id }"></td>
+            <td th:text="${e.title }"></td>
+            <td th:text="${e.summary }"></td>
+            <td th:text="${e.uploadUser }"></td>
+            <td th:text="${#calendars.format(e.createDate,'yyyy-MM-dd')}"></td>
+            <td><a href="#"
+                   th:href="@{/update(eId=${e.id})}">修改</a>|
+                <a href="#"
+                   th:onclick="'deleteObj(\''+${e.id}+'\')'">删除</a>
+            </td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+</body>
+</html>

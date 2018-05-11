@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bdqn.dao.EmailMapper">
+
+	<select id="list" resultType="java.util.HashMap">
+		select user.userName as userName,user.phone as phone,
+		email.title as title,email.accepter as accepter,
+		email.sendTime as sendTime,email.id as id
+		from t_email email left join t_user user
+		on email.accepter = user.email where email.type = #{type}
+		<if test="accepter!=''">
+			and user.userName like CONCAT('%',#{accepter},'%')
+		</if>
+		order by email.sendTime desc
+	</select>
+	
+	<select id="hasTitle" resultType="int">
+		select count(*) from t_email where title = #{title}
+	</select>
+
+	<insert id="add">
+		insert into
+		t_email(title,sender,accepter,sendTime,type,content,fileName,filePath,creationDate)
+		values(#{title},#{sender},#{accepter},now(),#{type},#{content},#{fileName},#{filePath},now())
+	</insert>
+
+	<delete id="delete" parameterType="String">
+		delete from t_email where id = #{id}
+	</delete>
+
+
+</mapper>
